@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: myAgent  # Cambiado a tu agente auto-hospedado
+  name: myAgent  
 
 steps:
 - script: echo Hello, world!
@@ -12,3 +12,26 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Compilación'
+  inputs:
+    command: 'build'
+    projects: '***/*csproj'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/StudentApp'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publicación'
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    workingDirectory: '$(System.DefaultWorkingDirectory)/StudentApp'
+
+- task: AzureRmWebAppDeployment@5
+  displayName: 'Despliegue'
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1(038f37af-8bcd-4643-88f7-ef578ad59ddc)'
+    appType: 'webApp'
+    WebAppName: 'StudentsApp'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
