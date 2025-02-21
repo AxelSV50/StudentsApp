@@ -4,12 +4,14 @@ trigger:
       - main  # Cambia esto si usas otra rama principal
 
 pool:
-  vmImage: 'ubuntu-latest'  # Usa Windows si necesitas herramientas específicas de Windows
+  vmImage: 'ubuntu-latest'
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
+  - checkout: self  # Asegura que el código se descargue correctamente
+
   - task: UseDotNet@2
     displayName: 'Instalar .NET 8 SDK'
     inputs:
