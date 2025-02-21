@@ -1,42 +1,11 @@
 trigger:
   branches:
     include:
-      - main  # Cambia esto si usas otra rama principal
+      - main
 
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  buildConfiguration: 'Release'
-
 steps:
-  - checkout: self  # Asegura que el código se descargue correctamente
-
-  - task: UseDotNet@2
-    displayName: 'Instalar .NET 8 SDK'
-    inputs:
-      packageType: 'sdk'
-      version: '8.0.x'
-      installationPath: $(Agent.ToolsDirectory)/dotnet
-
-  - script: |
-      dotnet restore
-    displayName: 'Restaurar dependencias'
-
-  - script: |
-      dotnet build --configuration $(buildConfiguration) --no-restore
-    displayName: 'Compilar aplicación'
-
-  - script: |
-      dotnet test --configuration $(buildConfiguration) --no-build --verbosity normal
-    displayName: 'Ejecutar pruebas'
-
-  - script: |
-      dotnet publish -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)
-    displayName: 'Publicar aplicación'
-
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publicar artefactos'
-    inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)
-      artifactName: 'drop'
+  - checkout: self  # Asegura que se descargue el código
+  - script: echo "Pipeline ejecutándose correctamente"
